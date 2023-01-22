@@ -5,11 +5,11 @@ namespace Mapbox.Unity.Ar
 	public class LerpAlignmentStrategy : AbstractAlignmentStrategy
 	{
 		[SerializeField]
-		float _followFactor;
+		private float _followFactor;
 
-		Vector3 _targetPosition;
-		Quaternion _targetRotation = Quaternion.identity;
-		bool _isAlignmentAvailable = false;
+		private Vector3 _targetPosition;
+		private Quaternion _targetRotation = Quaternion.identity;
+		private bool _isAlignmentAvailable = false;
 
 		public override void OnAlignmentAvailable(Alignment alignment)
 		{
@@ -19,7 +19,7 @@ namespace Mapbox.Unity.Ar
 		}
 
 		// FIXME: this should be in a coroutine, which is activated in Align.
-		void Update()
+		private void Update()
 		{
 			if (_isAlignmentAvailable)
 			{

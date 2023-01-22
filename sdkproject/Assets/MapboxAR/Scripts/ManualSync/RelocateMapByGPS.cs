@@ -1,21 +1,22 @@
-﻿namespace Mapbox.Examples
+﻿using UnityEngine.UI;
+
+namespace Mapbox.Examples
 {
 	using UnityEngine;
 	using Mapbox.Unity.Location;
 	using Mapbox.Unity.Map;
-	using UnityEngine.UI;
 
 	public class RelocateMapByGPS : MonoBehaviour
 	{
 
 		[SerializeField]
-		AbstractMap _map;
+		private AbstractMap _map;
 
 		[SerializeField]
-		Button _button;
+		private Button _button;
 
 		[SerializeField]
-		Transform _mapTransform;
+		private Transform _mapTransform;
 
 		private void Start()
 		{

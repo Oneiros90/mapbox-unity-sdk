@@ -1,23 +1,29 @@
-﻿namespace Mapbox.Examples
+﻿using UnityEngine.XR.ARFoundation;
+
+namespace Mapbox.Examples
 {
 	using UnityEngine;
-	using UnityARInterface;
 
 	public class UpdateMapPosByARPlaneY : MonoBehaviour
 	{
 		[SerializeField]
-		Transform _mapRoot;
+		private Transform _mapRoot;
 
-		void Start()
+		private readonly ARPlaneManager _planeManager = new();
+
+		private void Start()
 		{
-			ARInterface.planeAdded += UpdateMapPosOnY;
-			ARInterface.planeUpdated += UpdateMapPosOnY;
+			_planeManager.planesChanged += UpdateMapPosOnY;
+			_planeManager.planesChanged += UpdateMapPosOnY;
 		}
 
-		void UpdateMapPosOnY(BoundedPlane plane)
+		private void UpdateMapPosOnY(ARPlanesChangedEventArgs evt)
 		{
-			var pos = _mapRoot.position;
-			_mapRoot.position = new Vector3(pos.x, plane.center.y, pos.z);
+			foreach (var added in evt.added)
+			{
+				var pos = _mapRoot.position;
+				_mapRoot.position = new Vector3(pos.x, added.center.y, pos.z);
+			}
 		}
 	}
 }

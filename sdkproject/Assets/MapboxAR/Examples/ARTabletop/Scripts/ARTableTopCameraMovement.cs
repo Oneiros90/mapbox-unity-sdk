@@ -14,13 +14,13 @@
 		public float _panSpeed = 1.0f;
 
 		[SerializeField]
-		float _zoomSpeed = 0.25f;
+		private float _zoomSpeed = 0.25f;
 
 		[SerializeField]
 		public Camera _referenceCamera;
 
 		[SerializeField]
-		AbstractMap _mapManager;
+		private AbstractMap _mapManager;
 
 		private Vector3 _origin;
 		private Vector3 _mousePosition;
@@ -28,7 +28,7 @@
 		private bool _shouldDrag;
 		private bool _isInitialized = false;
 
-		void Awake()
+		private void Awake()
 		{
 			if (null == _referenceCamera)
 			{
@@ -56,7 +56,7 @@
 			}
 		}
 
-		void HandleMouseAndKeyBoard()
+		private void HandleMouseAndKeyBoard()
 		{
 			// zoom
 			float scrollDelta = 0.0f;
@@ -67,7 +67,7 @@
 			PanMapUsingTouchOrMouse();
 		}
 
-		void HandleTouch()
+		private void HandleTouch()
 		{
 			float zoomFactor = 0.0f;
 			//pinch to zoom.
@@ -102,7 +102,7 @@
 			}
 		}
 
-		void ZoomMapUsingTouchOrMouse(float zoomFactor)
+		private void ZoomMapUsingTouchOrMouse(float zoomFactor)
 		{
 			var zoom = Mathf.Max(0.0f, Mathf.Min(_mapManager.Zoom + zoomFactor * _zoomSpeed, 21.0f));
 
@@ -112,7 +112,7 @@
 			}
 		}
 
-		void PanMapUsingKeyBoard(float xMove, float zMove)
+		private void PanMapUsingKeyBoard(float xMove, float zMove)
 		{
 			if (Math.Abs(xMove) > 0.0f || Math.Abs(zMove) > 0.0f)
 			{
@@ -126,7 +126,7 @@
 			}
 		}
 
-		void PanMapUsingTouchOrMouse()
+		private void PanMapUsingTouchOrMouse()
 		{
 			if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
 			{

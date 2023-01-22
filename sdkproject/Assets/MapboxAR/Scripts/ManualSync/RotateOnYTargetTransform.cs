@@ -5,9 +5,9 @@
 	public class RotateOnYTargetTransform : MonoBehaviour
 	{
 		[SerializeField]
-		Transform _targetTransform;
+		private Transform _targetTransform;
 
-		void Update()
+		private void Update()
 		{
 			transform.eulerAngles = new Vector3(transform.eulerAngles.x, _targetTransform.eulerAngles.y, transform.eulerAngles.z);
 		}

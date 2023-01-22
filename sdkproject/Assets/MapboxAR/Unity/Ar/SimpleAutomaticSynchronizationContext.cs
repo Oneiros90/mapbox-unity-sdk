@@ -2,27 +2,27 @@
 {
 	using System.Collections.Generic;
 	using UnityEngine;
-	using Mapbox.Unity.Location;
+	using Location;
 	using System;
 
 
 	public class SimpleAutomaticSynchronizationContext : ISynchronizationContext
 	{
-		float _rotation;
-		Vector3 _position;
+		private float _rotation;
+		private Vector3 _position;
 
 		// These are lists for future implementation of averaging/iterating over time/distance.
-		List<Location> _gpsNodes = new List<Location>();
-		List<Vector3> _gpsPositions = new List<Vector3>();
-		List<Vector3> _arNodes = new List<Vector3>();
+		private List<Location> _gpsNodes = new List<Location>();
+		private List<Vector3> _gpsPositions = new List<Vector3>();
+		private List<Vector3> _arNodes = new List<Vector3>();
 
-		int _count;
+		private int _count;
 
-		Vector3 _currentArVector;
-		Vector3 _currentAbsoluteGpsVector;
+		private Vector3 _currentArVector;
+		private Vector3 _currentAbsoluteGpsVector;
 
-		Vector3 _previousArNode;
-		Vector3 _previousLocationPosition;
+		private Vector3 _previousArNode;
+		private Vector3 _previousLocationPosition;
 
 		/// <summary>
 		/// The synchronization bias.
@@ -102,7 +102,7 @@
 			}
 		}
 
-		void ComputeAlignment()
+		private void ComputeAlignment()
 		{
 			var rotation = Vector3.SignedAngle(_currentAbsoluteGpsVector, _currentArVector, Vector3.up);
 			var headingQuaternion = Quaternion.Euler(0, rotation, 0);

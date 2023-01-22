@@ -1,42 +1,46 @@
-﻿namespace Mapbox.Unity.Ar.Utilities
+﻿using UnityEngine.XR.ARFoundation;
+
+namespace Mapbox.Unity.Ar.Utilities
 {
 	using UnityEngine;
-	using UnityARInterface;
 
 	[RequireComponent(typeof(LineRenderer))]
 	public class PlotRoute : MonoBehaviour
 	{
 		[SerializeField]
-		Transform _target;
+		private Transform _target;
 
 		[SerializeField]
-		Color _color;
+		private Color _color;
 
 		[SerializeField]
-		float _height;
+		private float _height;
 
 		[SerializeField]
-		float _lineWidth = .2f;
+		private float _lineWidth = .2f;
 
 		[SerializeField]
-		float _updateInterval;
+		private float _updateInterval;
 
 		[SerializeField]
-		float _minDistance;
+		private float _minDistance;
 
-		LineRenderer _lineRenderer;
-		float _elapsedTime;
-		int _currentIndex = 0;
-		float _sqDistance;
-		Vector3 _lastPosition;
+		private LineRenderer _lineRenderer;
+		private float _elapsedTime;
+		private int _currentIndex;
+		private float _sqDistance;
+		private Vector3 _lastPosition;
+
+		private readonly ARPlaneManager _planeManager = new();
+
 #if !UNITY_EDITOR
 		bool _isStable = false;
 #endif
-		
-		void Awake()
+
+		private void Awake()
 		{
 			// HACK: this needs to move somewhere else (marshal).
-			ARInterface.planeAdded += AddAnchor;
+			_planeManager.planesChanged += AddAnchor;
 
 			_lineRenderer = GetComponent<LineRenderer>();
 			_lineRenderer.startColor = _color;
@@ -45,9 +49,9 @@
 			_sqDistance = _minDistance * _minDistance;
 		}
 
-		void AddAnchor(BoundedPlane anchorData)
+		private void AddAnchor(ARPlanesChangedEventArgs evt)
 		{
-			ARInterface.planeAdded -= AddAnchor;
+			_planeManager.planesChanged -= AddAnchor;
 			AddNode(_target.localPosition);
 		}
 
@@ -57,7 +61,7 @@
 			_lineRenderer.widthMultiplier = width;
 		}
 
-		void Update()
+		private void Update()
 		{
 #if !UNITY_EDITOR
 			if (!_isStable)
@@ -77,7 +81,7 @@
 			}
 		}
 
-		void AddNode(Vector3 position)
+		private void AddNode(Vector3 position)
 		{
 			if (_height > 0)
 			{

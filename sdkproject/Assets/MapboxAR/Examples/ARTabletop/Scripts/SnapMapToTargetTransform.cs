@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Mapbox.Unity.Map;
 
 public class SnapMapToTargetTransform : MonoBehaviour
@@ -18,12 +16,12 @@ public class SnapMapToTargetTransform : MonoBehaviour
 		}
 	}
 
-	void Start()
+	private void Start()
 	{
 		_map.OnUpdated += SnapMapToTarget;
 	}
 
-	void SnapMapToTarget()
+	private void SnapMapToTarget()
 	{
 		var h = _map.QueryElevationInUnityUnitsAt(_map.CenterLatitudeLongitude);
 		_map.Root.transform.position = new Vector3(

@@ -5,9 +5,9 @@
 	public class FollowTargetTransform : MonoBehaviour
 	{
 		[SerializeField]
-		Transform _targetTransform;
+		private Transform _targetTransform;
 
-		void Update()
+		private void Update()
 		{
 			transform.position = new Vector3(_targetTransform.position.x, transform.position.y, _targetTransform.position.z);
 		}

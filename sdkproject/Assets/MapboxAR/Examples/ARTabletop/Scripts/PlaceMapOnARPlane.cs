@@ -1,35 +1,37 @@
 ﻿using UnityEngine;
-using UnityARInterface;
+using UnityEngine.XR.ARFoundation;
 
-public class PlaceMapOnARPlane : MonoBehaviour
+namespace UnityARInterface
 {
-
-	[SerializeField]
-	private Transform _mapTransform;
-
-	void Start()
+	public class PlaceMapOnARPlane : MonoBehaviour
 	{
-		ARPlaneHandler.returnARPlane += PlaceMap;
-		ARPlaneHandler.resetARPlane += ResetPlane;
-	}
+		[SerializeField]
+		private Transform _mapTransform;
 
-	void PlaceMap(BoundedPlane plane)
-	{
-		if (!_mapTransform.gameObject.activeSelf)
+		private void Start()
 		{
-			_mapTransform.gameObject.SetActive(true);
+			ARPlaneHandler.returnARPlane += PlaceMap;
+			ARPlaneHandler.resetARPlane += ResetPlane;
 		}
 
-		_mapTransform.position = plane.center;
-	}
+		private void PlaceMap(ARPlane plane)
+		{
+			if (!_mapTransform.gameObject.activeSelf)
+			{
+				_mapTransform.gameObject.SetActive(true);
+			}
 
-	void ResetPlane()
-	{
-		_mapTransform.gameObject.SetActive(false);
-	}
+			_mapTransform.position = plane.center;
+		}
 
-	private void OnDisable()
-	{
-		ARPlaneHandler.returnARPlane -= PlaceMap;
+		private void ResetPlane()
+		{
+			_mapTransform.gameObject.SetActive(false);
+		}
+
+		private void OnDisable()
+		{
+			ARPlaneHandler.returnARPlane -= PlaceMap;
+		}
 	}
 }

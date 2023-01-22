@@ -1,8 +1,9 @@
-﻿namespace Mapbox.Unity.Ar
+﻿using UnityEngine.XR.ARFoundation;
+
+namespace Mapbox.Unity.Ar
 {
-	using Mapbox.Unity.Map;
-	using Mapbox.Unity.Location;
-	using UnityARInterface;
+	using Map;
+	using Location;
 	using UnityEngine;
 	using Mapbox.Unity.Utilities;
 	using System;
@@ -10,43 +11,44 @@
 	public class ManualSynchronizationContextBehaviour : MonoBehaviour, ISynchronizationContext
 	{
 		[SerializeField]
-		AbstractMap _map;
+		private AbstractMap _map;
 
 		[SerializeField]
-		Transform _mapCamera;
+		private Transform _mapCamera;
 
 		[SerializeField]
-		TransformLocationProvider _locationProvider;
+		private TransformLocationProvider _locationProvider;
 
 		[SerializeField]
-		AbstractAlignmentStrategy _alignmentStrategy;
+		private AbstractAlignmentStrategy _alignmentStrategy;
 
-		float _lastHeight;
-		float _lastHeading = 0;
+		private float _lastHeight;
+
+		private readonly ARPlaneManager _planeManager = new();
 
 		public event Action<Alignment> OnAlignmentAvailable = delegate { };
 
-		void Start()
+		private void Start()
 		{
 			_alignmentStrategy.Register(this);
 			_map.OnInitialized += Map_OnInitialized;
-			ARInterface.planeAdded += PlaneAddedHandler;
+			_planeManager.planesChanged += PlaneAddedHandler;
 		}
 
-		void OnDestroy()
+		private void OnDestroy()
 		{
 			_alignmentStrategy.Unregister(this);
 			_locationProvider.OnLocationUpdated -= LocationProvider_OnLocationUpdated;
-			ARInterface.planeAdded -= PlaneAddedHandler;
+			_planeManager.planesChanged -= PlaneAddedHandler;
 		}
 
-		void Map_OnInitialized()
+		private void Map_OnInitialized()
 		{
 			_map.OnInitialized -= Map_OnInitialized;
 			_locationProvider.OnLocationUpdated += LocationProvider_OnLocationUpdated;
 		}
 
-		void LocationProvider_OnLocationUpdated(Location location)
+		private void LocationProvider_OnLocationUpdated(Location location)
 		{
 			if (location.IsLocationUpdated)
 			{
@@ -55,10 +57,10 @@
 				alignment.Rotation = -location.UserHeading + _map.Root.localEulerAngles.y;
 
 				// Rotate our offset by the last heading.
-				var rotation = Quaternion.Euler(0, -_lastHeading, 0);
+				var rotation = Quaternion.Euler(0, 0, 0);
 				alignment.Position = rotation * (-Conversions.GeoToWorldPosition(location.LatitudeLongitude,
-																				 _map.CenterMercator,
-																				 _map.WorldRelativeScale).ToVector3xz() + originalPosition);
+					_map.CenterMercator,
+					_map.WorldRelativeScale).ToVector3xz() + originalPosition);
 				alignment.Position.y = _lastHeight;
 
 				OnAlignmentAvailable(alignment);
@@ -73,10 +75,13 @@
 			}
 		}
 
-		void PlaneAddedHandler(BoundedPlane plane)
+		private void PlaneAddedHandler(ARPlanesChangedEventArgs evt)
 		{
-			_lastHeight = plane.center.y;
-			Unity.Utilities.Console.Instance.Log(string.Format("AR Plane Height: {0}", _lastHeight), "yellow");
+			foreach (var added in evt.added)
+			{
+				_lastHeight = added.center.y;
+				Unity.Utilities.Console.Instance.Log(string.Format("AR Plane Height: {0}", _lastHeight), "yellow");
+			}
 		}
 	}
 }

@@ -7,19 +7,19 @@ namespace Mapbox.Unity.Ar
 	public class AverageHeadingAlignmentStrategy : AbstractAlignmentStrategy
 	{
 		[SerializeField]
-		int _maxSamples = 5;
+		private int _maxSamples = 5;
 
 		[SerializeField]
-		float _ignoreAngleThreshold = 15f;
+		private float _ignoreAngleThreshold = 15f;
 
 		[SerializeField]
-		float _lerpSpeed;
+		private float _lerpSpeed;
 
-		List<float> _rotations = new List<float>();
+		private List<float> _rotations = new List<float>();
 
-		float _averageRotation;
-		Quaternion _targetRotation;
-		Vector3 _targetPosition;
+		private float _averageRotation;
+		private Quaternion _targetRotation;
+		private Vector3 _targetPosition;
 
 		public static float meanAngle(List<float> rotations)
 		{
@@ -71,7 +71,7 @@ namespace Mapbox.Unity.Ar
 		}
 
 		// FIXME: this should be in a coroutine, which is activated in Align.
-		void Update()
+		private void Update()
 		{
 			var t = _lerpSpeed * Time.deltaTime;
 			_transform.SetPositionAndRotation(

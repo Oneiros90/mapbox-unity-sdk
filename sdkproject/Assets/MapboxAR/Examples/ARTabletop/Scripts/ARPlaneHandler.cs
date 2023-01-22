@@ -1,35 +1,39 @@
 ﻿using UnityEngine;
 using System;
+using UnityEngine.XR.ARFoundation;
 
 namespace UnityARInterface
 {
 	public class ARPlaneHandler : MonoBehaviour
 	{
 		public static Action resetARPlane;
-		public static Action<BoundedPlane> returnARPlane;
-		private string _planeId;
-		private BoundedPlane _cachedARPlane;
+		public static Action<ARPlane> returnARPlane;
+		private ARPlane _cachedARPlane;
 
-		void Start()
+		private readonly ARPlaneManager _planeManager = new();
+
+		private void Start()
 		{
-			ARInterface.planeAdded += UpdateARPlane;
-			ARInterface.planeUpdated += UpdateARPlane;
+			_planeManager.planesChanged += UpdateARPlane;
+			_planeManager.planesChanged += UpdateARPlane;
 		}
 
-		void UpdateARPlane(BoundedPlane arPlane)
+		private void UpdateARPlane(ARPlanesChangedEventArgs evt)
 		{
+			foreach (var added in evt.added)
+				UpdateARPlane(added);
 
-			if (_planeId == null)
-			{
-				_planeId = arPlane.id;
-			}
+			foreach (var added in evt.updated)
+				UpdateARPlane(added);
+		}
 
-			if (arPlane.id == _planeId)
-			{
+		private void UpdateARPlane(ARPlane arPlane)
+		{
+			if (_cachedARPlane == null)
 				_cachedARPlane = arPlane;
-			}
 
-			returnARPlane(_cachedARPlane);
+			if (arPlane == _cachedARPlane)
+				returnARPlane(_cachedARPlane);
 		}
 	}
 }
