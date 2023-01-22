@@ -7,7 +7,7 @@
 
 	public class ExceptionLogger : MonoBehaviour
 	{
-		void Start()
+		private void Start()
 		{
 			Application.logMessageReceived += Application_logMessageReceived;
 		}
@@ -19,7 +19,7 @@
 			Console.Instance.Log(msg, "red");
 		}
 
-		void OnDisable()
+		private void OnDisable()
 		{
 			Application.logMessageReceived -= Application_logMessageReceived;
 		}

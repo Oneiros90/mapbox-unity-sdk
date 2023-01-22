@@ -7,8 +7,8 @@ namespace Mapbox.Unity.Utilities.DebugTools
 
 	public static class PathHelpers
 	{
-		static readonly string kScenesPath = Path.Combine(Application.dataPath, "Mapbox/Examples");
-		static readonly string arScenesPath = Path.Combine(Application.dataPath, "MapboxAR/Examples");
+		private static readonly string kScenesPath = Path.Combine(Application.dataPath, "Mapbox/Examples");
+		private static readonly string arScenesPath = Path.Combine(Application.dataPath, "MapboxAR/Examples");
 
 		public static List<string> AllScenes
 		{
@@ -33,7 +33,7 @@ namespace Mapbox.Unity.Utilities.DebugTools
 			}
 		}
 
-		static List<FileInfo> DirSearch(DirectoryInfo d, string searchFor)
+		private static List<FileInfo> DirSearch(DirectoryInfo d, string searchFor)
 		{
 			List<FileInfo> founditems = null;
 
@@ -49,7 +49,8 @@ namespace Mapbox.Unity.Utilities.DebugTools
 			}
 			return founditems;
 		}
-		static string GetRelativeAssetPathFromFullPath(string fullPath)
+
+		private static string GetRelativeAssetPathFromFullPath(string fullPath)
 		{
 			fullPath = CleanPathSeparators(fullPath);
 			if (fullPath.Contains(Application.dataPath))
@@ -60,7 +61,7 @@ namespace Mapbox.Unity.Utilities.DebugTools
 			return null;
 		}
 
-		static string CleanPathSeparators(string s)
+		private static string CleanPathSeparators(string s)
 		{
 			const string forwardSlash = "/";
 			const string backSlash = "\\";
