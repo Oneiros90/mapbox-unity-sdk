@@ -2,6 +2,7 @@
 namespace Mapbox.Editor.Build
 {
 	using UnityEngine;
+	using UnityEngine.SceneManagement;
 	using UnityEditor;
 	using UnityEditor.Callbacks;
 	using UnityEditor.iOS.Xcode;
@@ -10,8 +11,10 @@ namespace Mapbox.Editor.Build
 	using System.Text.RegularExpressions;
 	using System.Globalization;
 
-	public class Mapbox_iOS_build : MonoBehaviour
+	public static class Mapbox_iOS_build
 	{
+		private const string defaultIncludePath = "Mapbox/Core/Plugins/iOS/MapboxMobileEvents/include";
+
 		[PostProcessBuild]
 		public static void AppendBuildProperty(BuildTarget buildTarget, string pathToBuiltProject)
 		{
@@ -19,7 +22,7 @@ namespace Mapbox.Editor.Build
 			{
 				PBXProject proj = new PBXProject();
 				// path to pbxproj file
-				string projPath = pathToBuiltProject + "/Unity-iPhone.xcodeproj/project.pbxproj";
+				var projPath = pathToBuiltProject + "/Unity-iPhone.xcodeproj/project.pbxproj";
 
 				var file = File.ReadAllText(projPath);
 				proj.ReadFromString(file);
@@ -29,8 +32,8 @@ namespace Mapbox.Editor.Build
 				string target = proj.TargetGuidByName("Unity-iPhone");
 #endif
 
-				var defaultIncludePath = "Mapbox/Core/Plugins/iOS/MapboxMobileEvents/include";
-				var includePaths = Directory.GetDirectories(Application.dataPath, "include", SearchOption.AllDirectories);
+				var includePaths =
+					Directory.GetDirectories(Application.dataPath, "include", SearchOption.AllDirectories);
 				var includePath = includePaths
 					.Select(path => Regex.Replace(path, Application.dataPath + "/", ""))
 					.Where(path => path.EndsWith(defaultIncludePath, true, CultureInfo.InvariantCulture))
@@ -42,6 +45,27 @@ namespace Mapbox.Editor.Build
 
 				File.WriteAllText(projPath, proj.WriteToString());
 			}
+		}
+
+		public static void BuildProject(string path)
+		{
+			var activeScenePaths = new string[SceneManager.sceneCount];
+			for (var i = 0; i < activeScenePaths.Length; i++)
+			{
+				var scene = SceneManager.GetSceneAt(i);
+				if (scene.IsValid())
+					activeScenePaths[i] = scene.path;
+			}
+
+			var options = new BuildPlayerOptions
+			{
+				scenes = activeScenePaths,
+				target = BuildTarget.iOS,
+				locationPathName = path,
+			};
+
+			BuildPipeline.BuildPlayer(options);
+			EditorApplication.Exit(0);
 		}
 	}
 }
