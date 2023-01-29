@@ -75,5 +75,9 @@ EditorBuildSettings:
     path: Assets/MapboxAR/Examples/Scenes/WorldScaleAR.unity
     guid: c60dfd6bb74264e44b3dbf93e9d129c4
   m_configObjects:
+    UnityEditor.XR.ARKit.ARKitSettings: {fileID: 11400000, guid: 8ede52049335f4b1fb3e8aba0702cb38,
+      type: 2}
     com.unity.xr.arfoundation.simulation_settings: {fileID: 11400000, guid: b71b59760af9bcb409dcece572bc1ec7,
+      type: 2}
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 4cd374088af244fdd8ecf887f393c434,
       type: 2}

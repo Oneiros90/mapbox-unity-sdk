@@ -47,8 +47,11 @@ namespace Mapbox.Editor.Build
 			}
 		}
 
-		public static void BuildProject(string path)
+		public static void BuildProject()
 		{
+			var args = System.Environment.GetCommandLineArgs();
+			var path = args[0];
+
 			var activeScenePaths = new string[SceneManager.sceneCount];
 			for (var i = 0; i < activeScenePaths.Length; i++)
 			{
@@ -61,7 +64,7 @@ namespace Mapbox.Editor.Build
 			{
 				scenes = activeScenePaths,
 				target = BuildTarget.iOS,
-				locationPathName = path,
+				locationPathName = path
 			};
 
 			BuildPipeline.BuildPlayer(options);
